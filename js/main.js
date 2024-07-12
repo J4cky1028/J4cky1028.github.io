@@ -58,7 +58,7 @@ function validateName() {
 
 function validateEmail() {
   var name = document.getElementById("email").value;
-  if (!name.match(/^[A-Za-z\.\-[0-9]*[@][A-Za-z]*[\.][a-z]{2,6}$/)) {
+  if (!name.match(/^[A-Za-z\.\-[0-9]*[@][A-Za-z0-9]*[\.][a-z]{2,6}$/)) {
     alert("Please enter valid email!");
     return false;
   }
