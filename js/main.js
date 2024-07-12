@@ -49,7 +49,7 @@ var submitted = false;
 
 function validateName() {
   var name = document.getElementById("name").value;
-  if (name.match(/[0-9]/)) {
+  if (name.match(!name.match(/^[a-zA-Z0-9\s]+$/)) {
     alert("Please enter a valid name!");
     return false;
   }
