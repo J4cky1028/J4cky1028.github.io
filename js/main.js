@@ -39,10 +39,10 @@ window.addEventListener("scroll", () => {
 });
 
 if (window.innerWidth < 1200) {
-    burger = document.querySelector(".menu-btn");
-    burger.addEventListener("click", function() {
-        nav.classList.toggle("close");
-    });
+  burger = document.querySelector(".menu-btn");
+  burger.addEventListener("click", function () {
+    nav.classList.toggle("close");
+  });
 }
 
 var submitted = false;
