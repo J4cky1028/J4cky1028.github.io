@@ -57,8 +57,12 @@ function validateName() {
 }
 
 function validateEmail() {
-  var name = document.getElementById("email").value;
-  if (!name.match(/^[A-Za-z\.\-[0-9]*[@][A-Za-z0-9]*[\.][a-z]{2,6}$/)) {
+  var email = document.getElementById("email").value;
+  if (!String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )) {
     alert("Please enter valid email!");
     return false;
   }
