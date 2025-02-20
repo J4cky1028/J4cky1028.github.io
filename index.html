@@ -232,11 +232,9 @@
         <form
           class="contact-form shadow-dark"
           id="contact-form"
-          action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSe1vZDF3qjGNvtwS6Mt4obe8yxc6hTZiUN-kMkdA3aK9Tq0-Q/formResponse"
+          action="https://formspree.io/f/mpwqbpjl"
           method="post"
-          target="hidden_iframe"
-          role="form"
-          onsubmit="validateForm();"
+          target="_top"
         >
           <div class="input-fields">
             <input
@@ -244,24 +242,16 @@
               required
               class="input"
               id="name"
-              name="entry.1094558843"
+              name="name"
               placeholder="Name"
             />
             <input
-              type="text"
+              type="email"
               required
               class="input"
               id="email"
-              name="entry.501617227"
+              name="email"
               placeholder="Email"
-            />
-            <input
-              type="text"
-              required
-              class="input"
-              id="subject"
-              name="entry.1508820238"
-              placeholder="Subject"
             />
           </div>
 
@@ -270,7 +260,7 @@
               required
               placeholder="Message"
               id="message"
-              name="entry.36962003"
+              name="message"
             ></textarea>
             <button type="submit" name="submit" class="btn">Send</button>
             <div id="success" style="color: green"><br /></div>
