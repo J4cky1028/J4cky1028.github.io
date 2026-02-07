@@ -1,279 +1,369 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Homepage</title>
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/fontawesome/all.css" />
-    <link rel="icon" href="res/icon.jpeg" />
-  </head>
-  <body>
-    <!--Preloader-->
-    <div class="preloader">
-      <div class="loader"></div>
+<html lang="zh-TW" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>YMD // 0xYMD</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:        #0a0e14;
+      --bg-dark:   #06080c;
+      --fg:        #e0f7ff;
+      --accent:     #00ffea;
+      --accent-dim: #00b8a9;
+      --red:        #ff3366;
+      --green:      #33ff99;
+      --purple:     #cc33ff;
+      --gray:       #4a5568;
+      --matrix:     #0f0;
+      --warning:    #ffcc00;
+      --success:    #33ff99;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; background:var(--bg); color:var(--fg); font-family:'JetBrains Mono', monospace; overflow-x:hidden; }
+    body {
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0,255,234,0.06) 0%, transparent 25%),
+        radial-gradient(circle at 90% 80%, rgba(255,51,102,0.04) 0%, transparent 35%);
+      background-attachment: fixed;
+    }
+
+    canvas#matrix { position:fixed; inset:0; z-index:-2; opacity:0.07; pointer-events:none; }
+
+    .container {
+      min-height:100vh; padding:4rem 2rem; max-width:1100px; margin:0 auto;
+      display:flex; flex-direction:column; justify-content:center;
+    }
+
+    header { text-align:center; margin-bottom:5rem; }
+
+    .glitch {
+      font-family:'Orbitron', sans-serif;
+      font-size: clamp(3.5rem, 12vw, 9rem);
+      font-weight:700;
+      color:var(--accent);
+      text-shadow: 
+        0 0 10px var(--accent-dim),
+        0 0 30px var(--accent-dim),
+        -2px 0 0 var(--red),
+         2px 0 0 var(--green);
+      animation: glitch 4s infinite;
+      letter-spacing:-2px;
+      position:relative;
+      display:inline-block;
+    }
+
+    .glitch::before, .glitch::after {
+      content:attr(data-text); position:absolute; top:0; left:0; width:100%; height:100%; opacity:0.8;
+    }
+    .glitch::before { left:2px; text-shadow:-2px 0 var(--red); animation:glitch-anim 3s infinite linear alternate-reverse; clip:rect(0,900px,0,0); }
+    .glitch::after  { left:-2px; text-shadow: 2px 0 var(--green); animation:glitch-anim2 2.5s infinite linear alternate-reverse; clip:rect(0,900px,0,0); }
+
+    main {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
+      gap:2.5rem;
+      margin:3rem 0;
+    }
+
+    .card {
+      background:rgba(10,15,25,0.65);
+      backdrop-filter:blur(8px);
+      border:1px solid rgba(0,255,234,0.12);
+      border-radius:8px;
+      padding:1.8rem;
+      transition:all 0.4s ease;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover {
+      transform:translateY(-8px);
+      border-color:var(--accent);
+      box-shadow:0 20px 40px rgba(0,255,234,0.09);
+    }
+
+    .card::before {
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(135deg, transparent 40%, rgba(0,255,234,0.09) 50%, transparent 60%);
+      transform:translateX(-100%);
+      transition:transform 0.7s ease;
+    }
+    .card:hover::before { transform:translateX(100%); }
+
+    .card h2 {
+      color:var(--accent);
+      font-size:1.4rem;
+      margin-bottom:1.2rem;
+      font-weight:500;
+      letter-spacing:1px;
+    }
+
+    .about p, .interests p {
+      line-height:1.7;
+      opacity:0.9;
+      margin-bottom:1rem;
+    }
+
+    .interests ul, .vuln-list ul {
+      list-style:none;
+      padding-left:1.2rem;
+      line-height:1.6;
+    }
+
+    .interests li, .vuln-list li {
+      position:relative;
+      margin-bottom:1rem;
+      padding-left:0.8rem;
+    }
+
+    .interests li::before, .vuln-list li::before {
+      content:"→";
+      color:var(--green);
+      position:absolute;
+      left:-1.2rem;
+      font-weight:bold;
+    }
+
+    .vuln-item {
+      margin:1rem 0;
+      padding:0.9rem;
+      background:rgba(255,51,102,0.08);
+      border-left:4px solid var(--red);
+      border-radius:4px;
+    }
+
+    .vuln-id {
+      color:var(--red);
+      font-weight:bold;
+      font-size:1.1rem;
+    }
+
+    .vuln-status {
+      color:var(--success);
+      font-size:0.85rem;
+      margin-left:0.6rem;
+      font-weight:bold;
+    }
+
+    .vuln-date {
+      color:var(--gray);
+      font-size:0.85rem;
+      margin-left:0.6rem;
+    }
+
+    .skills-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+      gap:1rem;
+      margin-top:1rem;
+    }
+
+    .skill-tag {
+      background:rgba(0,255,234,0.08);
+      border:1px solid var(--accent-dim);
+      color:var(--accent);
+      padding:0.5rem 1rem;
+      border-radius:4px;
+      font-size:0.9rem;
+      text-align:center;
+      transition:all 0.3s;
+    }
+
+    .skill-tag:hover {
+      background:var(--accent-dim);
+      color:var(--bg);
+      transform:scale(1.05);
+    }
+
+    .status-line { font-size:0.9rem; margin:0.7rem 0; color:var(--gray); }
+    .status-line span { color:var(--green); }
+
+    .links {
+      display:flex; flex-wrap:wrap; gap:1.2rem; margin-top:1.5rem;
+    }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:0.6rem;
+      padding:0.7rem 1.4rem;
+      background:transparent;
+      border:1px solid var(--accent-dim);
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:500;
+      border-radius:4px;
+      transition:all 0.3s ease;
+      font-size:0.95rem;
+    }
+
+    .btn:hover {
+      background:rgba(0,255,234,0.08);
+      border-color:var(--accent);
+      box-shadow:0 0 15px rgba(0,255,234,0.25);
+      transform:translateY(-2px);
+    }
+
+    footer {
+      text-align:center; margin-top:auto; padding:4rem 0 2rem;
+      color:var(--gray); font-size:0.85rem;
+    }
+
+    @keyframes glitch {
+      0%,100% { text-shadow:0 0 10px var(--accent-dim); }
+      2%,64%  { text-shadow:-2px 0 0 var(--red), 2px 0 0 var(--green); }
+      4%,60%  { text-shadow:2px 0 0 var(--red), -2px 0 0 var(--green); }
+    }
+    @keyframes glitch-anim { 0%,100% { clip:rect(30px,9999px,90px,0); } 5% { clip:rect(80px,9999px,30px,0); } }
+    @keyframes glitch-anim2 { 0%,100% { clip:rect(50px,9999px,70px,0); } 10% { clip:rect(20px,9999px,85px,0); } }
+
+    @media (max-width:600px) {
+      .glitch { font-size:clamp(3rem,10vw,6rem); }
+      main { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+  <header>
+    <h1 class="glitch" data-text="YMD">YMD</h1>
+    <p style="margin-top:1.2rem; color:var(--gray); font-size:1.1rem;">
+      0xYMD // CTF Player • Security Researcher • Night Owl
+    </p>
+  </header>
+
+  <main>
+
+    <div class="card about">
+      <h2>自我介紹 / About Me</h2>
+      <p>My name is YMD and I'm currently pursuing a Bachelor's degree in Computer Science at The Hong Kong University of Science and Technology (HKUST).</p>
+      <p>Throughout my academic journey, I've developed a strong fascination with the field of cybersecurity and the challenges it presents.</p>
+      <p>Beyond the classroom, I'm an active member of the Black Bauhinia CTF Team, where I collaborate with like-minded peers on projects, participate in cybersecurity competitions, and engage in thought-provoking discussions about the latest trends and developments in the field.</p>
     </div>
-    <!--Preloader End-->
 
-    <!--Navbar-->
-    <nav class="navbar">
-      <div class="container">
-        <div class="navbar-inner">
-          <div class="burger">
-            <i class="fa fa-bars menu-btn"></i>
-          </div>
-          <ul class="navbar-item close">
-            <li><a href="#home" class="active">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#portfolio">Portfolio</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
+    <div class="card">
+      <h2>Skills Set</h2>
+      <div class="skills-grid">
+        <div class="skill-tag">Web Security</div>
+        <div class="skill-tag">Red Teaming</div>
+        <div class="skill-tag">Pentest</div>
+        <div class="skill-tag">Python</div>
+        <div class="skill-tag">C++</div>
+        <div class="skill-tag">Java</div>
+      </div>
+    </div>
+
+    <div class="card interests">
+      <h2>個人興趣 / Interests</h2>
+      <ul>
+        <li>Grinding CTF challenges (especially web) late at night</li>
+        <li>Finding new vulnerabilities and exploits</li>
+        <li>Listening to J-Pop</li>
+        <li>Playing games</li>
+        <li>Taking photos</li>
+        <li>Watching anime</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Discovered Vulnerabilities / 發現的漏洞</h2>
+      <p style="opacity:0.8; margin-bottom:1rem;">Responsible disclosure & vuln research (updated Feb 2026)</p>
+      <div class="vuln-list">
+        <div class="vuln-item">
+          <span class="vuln-id">CVE-2025-45662</span><span class="vuln-date">2025-04</span><br>
+          Vendor: shinovon/mpgram-web<br>
+          Type: XSS<br>
+        </div>
+        <div class="vuln-item">
+          <span class="vuln-id">CVE-2025-45661</span><span class="vuln-date">2025-04</span><br>
+          Vendor: nekocari/miniTCG<br>
+          Type: XSS<br>
+        </div>
+        <div class="vuln-item">
+          <span class="vuln-id">CVE-2025-29594</span><span class="vuln-date">2025-03</span><br>
+          Vendor: LielXD/CS2-WeaponPaints-Website<br>
+          Type: XSS<br>
         </div>
       </div>
-    </nav>
-    <!--Navbar End-->
+    </div>
 
-    <!--Home Section-->
-    <section class="section home" id="home">
-      <div class="container">
-        <div class="home-inner">
-          <div class="profile-pic">
-            <img
-              src="res/icon.jpeg"
-              alt="Profile Picture"
-              class="shadow-dark"
-            />
-          </div>
-          <div class="intro">
-            <h3>Hi! I'm YMD</h3>
-            <div class="social-media">
-              <a
-                href="https://www.linkedin.com/in/chun-yu-mok-a373702b9/"
-                target="_blank"
-                class="social"
-              >
-                <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
-              </a>
-              <a href="https://x.com/J4cky1028/" target="_blank" class="social">
-                <i class="fa-brands fa-x-twitter" aria-hidden="true"> </i>
-              </a>
-              <a
-                href="https://www.instagram.com/jackymok1028/"
-                target="_blank"
-                class="social"
-              >
-                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a
-                href="https://github.com/J4cky1028"
-                target="_blank"
-                class="social"
-              >
-                <i class="fa-brands fa-github" aria-hidden="true"></i>
-              </a>
-            </div>
-            <br />
-            <a href="cv.html" target="_blank" class="cv">View My CV</a>
-          </div>
-        </div>
+    <div class="card">
+      <h2>現在狀態 / Status</h2>
+      <div class="status-line">系統時間　<span id="clock">--:--:--</span></div>
+      <div class="status-line">位置　　　<span>Hong Kong</span></div>
+      <div class="status-line">心情　　　<span>Ciallo～(∠·ω< )⌒★</span></div>
+      <div class="status-line">專注　　　<span>Learning</span></div>
+      <div class="status-line">目標　　　<span>100 CVEs</span></div>
+    </div>
+
+    <div class="card">
+      <h2>連結 / Footprints</h2>
+      <div class="links">
+        <a href="https://www.linkedin.com/in/chun-yu-mok-a373702b9/" class="btn" target="_blank">LinkedIn</a>
+        <a href="https://www.instagram.com/jackymok1028/" class="btn" target="_blank">Instagram</a>
+        <a href="https://github.com/J4cky1028" class="btn" target="_blank">GitHub</a>
+        <a href="https://x.com/J4cky1028" class="btn" target="_blank">X / Twitter</a>
+        <a href="https://ctftime.org/team/83678" class="btn" target="_blank">CTFtime - Black Bauhinia</a>
+        <a href="mailto:jackymok1028@gmail.com" class="btn">jackymok1028[at]gmail.com</a>
       </div>
-    </section>
-    <!--Home Section End-->
+    </div>
 
-    <!--About Section-->
-    <section class="section" id="about">
-      <div class="container">
-        <h3 class="subtitle">About Me</h3>
-        <div class="about-inner">
-          <div class="about-content">
-            <p>
-              Hello! My name is YMD and I'm currently pursuing a Bachelor's
-              degree in Computer Science at The Hong Kong University of Science
-              and Technology (HKUST).
-            </p>
-            <p>
-              Throughout my academic journey, I've developed a strong
-              fascination with the field of cybersecurity and the challenges it
-              presents.
-            </p>
-            <p>
-              Beyond the classroom, I'm an active member of the Black Bauhinia
-              CTF Team, where I collaborate with like-minded peers on projects,
-              participate in cybersecurity competitions, and engage in
-              thought-provoking discussions about the latest trends and
-              developments in the field.
-            </p>
-          </div>
-          <div class="skills shadow-dark">
-            <ul>
-              <li class="cybersecurity">Cybersecurity</li>
-              <li class="python">python</li>
-              <li class="java">java</li>
-              <li class="cpp">c++</li>
-              <li class="html">html</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--About Section End-->
+  </main>
 
-    <!--Experience Section-->
-    <section class="section" id="experience">
-      <div class="container">
-        <h3 class="subtitle">Experience</h3>
-        <div class="experience-inner">
-          <div class="frame">
-            <div class="gallery shadow-dark">
-              <img
-                class="exp"
-                src="res/Experience/coding.png"
-                alt="Coding website"
-              />
-              <div class="description">Coding my own website!</div>
-            </div>
-          </div>
+  <footer>
+    <p>keep hacking • stay curious • since 2025 • ⌨</p>
+  </footer>
+</div>
 
-          <div class="frame">
-            <div class="gallery shadow-dark">
-              <img
-                class="exp"
-                src="res/Experience/ctf.png"
-                alt="flag{WoW_y0u_f0und_this_fl4g!}"
-              />
-              <div class="description">
-                Participate in Capture the Flag Competition!
-              </div>
-            </div>
-          </div>
+<script>
+// Matrix Rain
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-          <div class="frame">
-            <div class="gallery shadow-dark">
-              <img
-                class="exp"
-                src="res/Experience/coding_game.png"
-                alt="Coding game"
-              />
-              <div class="description">Coding some funny games.</div>
-            </div>
-          </div>
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
 
-          <div class="frame">
-            <div class="gallery shadow-dark">
-              <img
-                class="exp"
-                src="res/Experience/concert.jpg"
-                alt="LiVE is Smile Always～ASiA TOUR2024～ in Hong Kong"
-              />
-              <div class="description">Go to the concert!</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--Experience Section End-->
+const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
 
-    <!--Portfolio Section-->
-    <section class="section" id="portfolio">
-      <div class="container">
-        <h3 class="subtitle">Portfolio</h3>
-        <div class="portfolio-inner">
-          <div class="frame">
-            <a href="https://github.com/J4cky1028/vulnerability-research">
-              <div class="gallery shadow-dark">
-                <img class="exp" src="res/Experience/cve.png" alt="#" />
-                <div class="description">CVE Research!</div>
-              </div>
-            </a>
-          </div>
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(10,14,20,0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#0f0';
+  ctx.font = fontSize + 'px monospace';
 
-          <div class="frame">
-            <a href="#">
-              <div class="gallery shadow-dark">
-                <img class="exp" src="res/Experience/coding.png" alt="#" />
-                <div class="description">Coding my own website!</div>
-              </div>
-            </a>
-          </div>
+  for (let i = 0; i < drops.length; i++) {
+    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+    const x = i * fontSize;
+    const y = drops[i] * fontSize;
+    ctx.fillText(text, x, y);
+    if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 50);
 
-          <div class="frame">
-            <a href="#">
-              <div class="gallery shadow-dark">
-                <img class="exp" src="res/Experience/coding.png" alt="#" />
-                <div class="description">Coding my own website!</div>
-              </div>
-            </a>
-          </div>
-
-          <div class="frame">
-            <a href="#">
-              <div class="gallery shadow-dark">
-                <img class="exp" src="res/Experience/coding.png" alt="#" />
-                <div class="description">Coding my own website!</div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!--Portfolio Section End-->
-
-    <!--Contact Section-->
-    <section class="Contact" id="contact">
-      <div class="container">
-        <h3 class="subtitle">Contact</h3>
-        <iframe
-          name="hidden_iframe"
-          id="hidden_iframe"
-          style="display: none"
-          onload="if(submitted){resetForm()}"
-        ></iframe>
-        <form
-          class="contact-form shadow-dark"
-          id="contact-form"
-          action="https://formspree.io/f/mpwqbpjl"
-          method="post"
-          target="_top"
-        >
-          <div class="input-fields">
-            <input
-              type="text"
-              required
-              class="input"
-              id="name"
-              name="name"
-              placeholder="Name"
-            />
-            <input
-              type="email"
-              required
-              class="input"
-              id="email"
-              name="email"
-              placeholder="Email"
-            />
-          </div>
-
-          <div class="msg">
-            <textarea
-              required
-              placeholder="Message"
-              id="message"
-              name="message"
-            ></textarea>
-            <button type="submit" name="submit" class="btn">Send</button>
-            <div id="success" style="color: green"><br /></div>
-          </div>
-        </form>
-      </div>
-    </section>
-    <!--Contact Section End-->
-
-    <!--Copyright Section-->
-    <div class="copyright">&copy; 2025 YMD. All rights reserved.</div>
-    <!--Copyright Section-->
-
-    <script src="js/main.js"></script>
-  </body>
+// Clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB', {hour12:false});
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+</body>
 </html>
